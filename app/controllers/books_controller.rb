@@ -3,6 +3,7 @@ before_action :authenticate_user!
 
   def show
   	@book = Book.find(params[:id])
+    @user = @book.user
     @new = Book.new
   end
 
@@ -12,8 +13,8 @@ before_action :authenticate_user!
   end
 
   def create
-    byebug
   	@book = Book.new(book_params) #Bookモデルのテーブルを使用しているのでbookコントローラで保存する。
+    @book.user_id = current_user.id # Association
   	if @book.save #入力されたデータをdbに保存する。
   		redirect_to @book, notice: "successfully created book!"#保存された場合の移動先を指定。
   	else
