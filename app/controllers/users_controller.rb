@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
-	before_action :baria_user, only: [:update]
+	before_action :baria_user, only: [:edit,:update]
 
   def show
   	@user = User.find(params[:id])
@@ -23,7 +23,9 @@ class UsersController < ApplicationController
   	if @user.update(user_params)
   		redirect_to users_path(@user), notice: "successfully updated user!"
   	else
-  		render "show"
+      @book = Book.new
+      @books = Book.all
+  		render "edit"
   	end
   end
 
@@ -34,7 +36,7 @@ class UsersController < ApplicationController
 
   #url直接防止　メソッドを自己定義してbefore_actionで発動。
    def baria_user
-  	unless params[:id].to_i == current_user.id
+  	unless User.find(params[:id]) == current_user
   		redirect_to user_path(current_user)
   	end
    end
